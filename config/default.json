@@ -1,0 +1,26 @@
+{
+  "server": {
+    "httpport": 9000,
+    "httpsport": 9930,
+    "https": true,
+    "apiBasePath": "/admin/v1",
+    "applicationName": "JMK Admin Service"
+  },
+  "db": {
+      "database": "DB",
+      "username": "postgres",
+      "password": "jim123",
+      "host": "127.0.0.1",   
+      "dialect": "postgres",
+      "pool": {
+        "max": 10,
+        "min": 0,
+        "acquire": 30000,
+        "idle": 10000
+      },
+      "define":{
+        "timestamps":false
+      }
+    }
+}
+  

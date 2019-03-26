@@ -1,0 +1,19 @@
+# compiled output
+
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+ 
+
+# IDE - VSCode
+ 
+#package-*.json
+*.log
+
+# e2e
+
+
+# System Files
+
