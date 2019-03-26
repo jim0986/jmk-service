@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     fechaModificacion: DataTypes.DATE
   }, {
     timestamps: false,
-    freezeTableName: true,
-    id: idTipoProducto
+    freezeTableName: true
   });
   TipoProducto.associate = function(models) {
     // associations can be defined here

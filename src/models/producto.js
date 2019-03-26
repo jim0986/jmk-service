@@ -8,8 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     fechaModificacion: DataTypes.DATE
   }, {
     timestamps: false,
-    freezeTableName: true,
-    id: idProducto
+    freezeTableName: true
   });
   producto.associate = function(models) {
     

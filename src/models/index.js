@@ -14,7 +14,7 @@ const config = require(__dirname + '/../../config/dbAuth.json')[env];
 //   sequelize = new Sequelize(config.database, config.username, config.password, config);
 // }
 // import * as config from 'config'; 
-const sequelize = new Sequelize(config.dev);
+const sequelize = new Sequelize(config);
 fs.readdirSync(__dirname)
   .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
