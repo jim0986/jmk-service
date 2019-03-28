@@ -28,6 +28,25 @@ module.exports = {
                 .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
         },
 
+        getProductoAll(req, res) {
+            const _page = req.params.page;
+            const _limit = req.params.limit;
+            const _offset = (_page * _limit) - _limit;
+            // console.log('_offset',_offset,'_limit',_limit);
+            return Producto                
+            .findAndCountAll({ attributes: ['idProducto', 'nombreProducto'],
+                                include: [{ model: TipoProducto, as: 'tp', 
+                                            attributes: ['idTipoProducto','tipoProducto'],
+                                         }],
+                                // where: { nombreProducto: { [Op.like]: '%%' } },
+                                order: [['nombreProducto', 'ASC']],
+                                limit: _limit,
+                                offset: _offset           
+            })
+            .then(result => res.status(200).send({ result: 'success', resultValue: result}))
+            .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
+        },
+        
         insertProducto(req, res) {
             return Producto
                   .findOne({ where: { nombreProducto: req.body.nombreProducto } })
@@ -64,10 +83,5 @@ module.exports = {
                   })
                   .catch(error => { res.status(400).send({ result: 'Failed', resultValue: error }), console.log('error custom', error) })
         }
-        // GetProductos(req, res) {
-        //     let getProductoQuery = 'select * from public."Producto"';
-        //     return Producto.sequilize.query(getProductoQuery)
-        //        .then(result => res.status(200).send(result))
-        //        .catch( error => { res.status(400).send(error); console.log('error custom', error) }); 
-        //     }
+        
 };
