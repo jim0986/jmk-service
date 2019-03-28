@@ -1,6 +1,10 @@
 import express from 'express'
 const router = express.Router()
 const productoController = require('../controllers').producto; 
-router.get('/get', productoController.GetProductos); 
+
+router.get('/get', productoController.getProducto); 
+router.get('/get/:id', productoController.getProductoByID); 
+router.post('/post', productoController.insertProducto); 
+router.put('/put/:id', productoController.updateProducto); 
 
 export default router

@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true
   });
   TipoProducto.associate = function(models) {
-    // associations can be defined here
+    // TipoProducto.hasMany(models.Producto, { foreignKey: 'idTipoProducto' });
+    // si no pongo foreignKey sequilize lo pondria tipoProductoId en el model Producto
   };
   return TipoProducto;
 };

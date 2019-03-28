@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true
   });
   producto.associate = function(models) {
-    
+    producto.belongsTo(models.TipoProducto, {  foreignKey: 'idTipoProducto', as: 'tp'})
+    // si no pongo foreignKey sequilize lo pondria tipoProductoId en el model TipoProducto
   };
   return producto;
 };
