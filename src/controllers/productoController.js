@@ -82,6 +82,22 @@ module.exports = {
                      res.status(200).send({result: 'Exist', resultValue: existProd.nombreProducto })
                   })
                   .catch(error => { res.status(400).send({ result: 'Failed', resultValue: error }), console.log('error custom', error) })
+        },
+
+        deleteProducto(req, res) {
+            return Producto
+                  .findByPk(req.params.id)
+                  .then(existProd => {
+                        if(!existProd) {
+                            return res.status(200).send({ result: 'notExist', resultValue: 'Not Exist'});
+                        }
+                        return Producto
+                              .destroy() //({where: { idProducto: req.params.id}}) 
+                              .then(resultDel => { res.status(200).send({result: 'success', resultValue: resultDel })})
+                            //   .catch(errorDel => { v = errorDel, res.status(400).send({ result: 'Failed2', resultValue: 'errorDel' })})
+                   })
+                  .catch(error => { res.status(400).send({ result: 'Failed', resultValue: typeof error }), console.log('error custom', error) })
         }
-        
+
+
 };
