@@ -11,10 +11,5 @@ module.exports = (sequelize, DataTypes) => {
     fecha_modificacion: DataTypes.DATE
   }, {
   }); 
-  // unidadMedida.associate = function(models) {
-  //   // associations can be defined here
-  //     // unidadMedida.hasOne(models.articuloModel, { foreignKey: 'id_unidad_medida' }  )
-  // };
-  // unidadMedida.removeAttribute('id');
   return unidadMedida;
 };

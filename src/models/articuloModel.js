@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   articulo.associate = function(models) {
     articulo.belongsTo(models.m_unidad_medida, { foreignKey: 'id_unidad_medida'} );
+    articulo.belongsTo(models.m_categoria_articulo, { foreignKey: 'id_categoria_articulo'} );
+    articulo.belongsTo(models.m_tipo_articulo, { foreignKey: 'id_tipo_articulo'} );
   };
   // articulo.removeAttribute('id');
   return articulo;

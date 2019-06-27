@@ -1,5 +1,7 @@
 const Articulo = require('.././models').m_articulo;
 const UnidadMedida = require('.././models').m_unidad_medida ;
+const CategoriaArticulo = require('.././models').m_categoria_articulo ;
+const TipoArticulo = require('.././models').m_tipo_articulo ;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -29,9 +31,17 @@ module.exports = {
                                              , 'nombr_articulo'
                                              , 'nomb_articulo_corto'
                                             ],
-                                include: [{ model: UnidadMedida, 
-                                            attributes: ['id_unidad_medida','cod_unidad_medida'],
-                                         }],
+                                include: [
+                                            { model: UnidadMedida, 
+                                                attributes: ['id_unidad_medida','cod_unidad_medida'],
+                                            },
+                                            { model: CategoriaArticulo, 
+                                                attributes: ['id_categoria_articulo','nomb_categoria_articulo'],
+                                            },
+                                            { model: TipoArticulo, 
+                                                attributes: ['id_tipo_articulo','nomb_tipo_articulo'],
+                                            }
+                                        ],
                                 where: {   id_empresa: req.body.id_empresa
                                          , eliminado: false
                                          , nombr_articulo: { [Op.like]: '%' + req.body.nombr_articulo + '%' } },
