@@ -7,14 +7,19 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 const config = require(__dirname + '/../../config/dbAuth.json')[env];
-// let sequelize;
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
-// import * as config from 'config'; 
 const sequelize = new Sequelize(config);
+
+// const _articuloModel = require('./articuloModel');
+// const _unidadMedidaModel = require('./unidadMedidaModel');
+
+// const articuloModel = _articuloModel(sequelize, Sequelize);
+// const unidadMedidaModel = _unidadMedidaModel(sequelize, Sequelize);
+
+// module.exports = {
+//   articuloModel,
+//   unidadMedidaModel
+// };
+
 fs.readdirSync(__dirname)
   .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');

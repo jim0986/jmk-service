@@ -11,7 +11,7 @@ module.exports = {
       nombr_articulo: { type: Sequelize.STRING(150), allowNull:false },
       nomb_articulo_corto: { type: Sequelize.STRING(100), allowNull:false },
       foto: { type: Sequelize.STRING },
-
+      //auditory fields
       eliminado: { type: Sequelize.BOOLEAN, allowNull:false, defaultValue: false },
       usuario_creacion: { type: Sequelize.STRING, allowNull:false },
       fecha_creacion: { type: Sequelize.DATE, allowNull:false, defaultValue: Sequelize.literal('NOW()') },

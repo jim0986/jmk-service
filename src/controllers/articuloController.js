@@ -1,28 +1,14 @@
 const Articulo = require('.././models').m_articulo;
-// const TipoProducto = require('.././models').TipoProducto ;
+const UnidadMedida = require('.././models').m_unidad_medida ;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 module.exports = { 
     
-        // getProducto(req, res) {
-        // return Producto
-        //     //.findAll()
-        //     .findAll({ attributes: ['idProducto', 'nombreProducto'],
-        //             //    include: [{ model: SubCategoria, as: 'sc', }],
-        //                include: [{ model: TipoProducto, as: 'tp', 
-        //                             attributes: ['idTipoProducto','tipoProducto'],
-        //                             where: {idTipoProducto: 1}
-        //                             //where: {  idTipoProducto: { [Op.or]: [1,3] } }
-        //                         }]     
-        //     })
-        //     .then(result => res.status(200).send(result))
-        //     .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
-        // },
-        
         obtenerArticuloPorId(req, res) {
             return Articulo                
-                .findOne({ where: {  id_articulo: req.params.id, id_empresa: req.body.id_empresa } })
+                .findOne({ // attributes: ['id_articulo', 'id_empresa'],
+                           where: {  id_articulo: req.params.id, id_empresa: req.body.id_empresa } })
                 .then(result => { 
                         if (!result) {
                              return   res.status(200).send({ result: 'notExist', resultValue: 'Not Exist'})
@@ -30,78 +16,121 @@ module.exports = {
                        return res.status(200).send({ result: 'success', resultValue: result})       
                 })
                 .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
-        } 
+        },
 
-        // getProductoAll(req, res) {
-        //     const _page = req.params.page;
-        //     const _limit = req.params.limit;
-        //     const _offset = (_page * _limit) - _limit;
-        //     // console.log('_offset',_offset,'_limit',_limit);
-        //     return Producto                
-        //     .findAndCountAll({ attributes: ['idProducto', 'nombreProducto'],
-        //                         include: [{ model: TipoProducto, as: 'tp', 
-        //                                     attributes: ['idTipoProducto','tipoProducto'],
-        //                                  }],
-        //                         // where: { nombreProducto: { [Op.like]: '%%' } },
-        //                         order: [['nombreProducto', 'ASC']],
-        //                         limit: _limit,
-        //                         offset: _offset           
-        //     })
-        //     .then(result => res.status(200).send({ result: 'success', resultValue: result}))
-        //     .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
-        // },
-        
-        // insertProducto(req, res) {
-        //     return Producto
-        //           .findOne({ where: { nombreProducto: req.body.nombreProducto } })
-        //           .then(existProd => {
-        //              if(!existProd) {
-        //                 return Producto.create({
-        //                     nombreProducto: req.body.nombreProducto,
-        //                     idTipoProducto: req.body.idTipoProducto,
-        //                     fechaCreacion: req.body.fechaCreacion                            
-        //                     })
-        //                     .then(result => res.status(200).send({ result: 'success', resultValue: result.nombreProducto}))
-        //                     .catch(errorInst => res.status(400).send({ result: 'Failed', resultValue: errorInst }) )
-        //              } 
-        //              res.status(200).send({result: 'Exist', resultValue: existProd.nombreProducto })
-        //           })
-        //           .catch(error => { res.status(400).send({ result: 'Failed', resultValue: error }), console.log('error custom', error) })
-        // },
+        obtenerArticuloBusqueda(req, res) {
+            const _page = req.params.page;
+            const _limit = req.params.limit;
+            const _offset = (_page * _limit) - _limit;
+            // console.log('_offset',_offset,'_limit',_limit);
+            return Articulo                
+            .findAndCountAll({  attributes: [  'id_articulo'
+                                             , 'cod_articulo'
+                                             , 'nombr_articulo'
+                                             , 'nomb_articulo_corto'
+                                            ],
+                                include: [{ model: UnidadMedida, 
+                                            attributes: ['id_unidad_medida','cod_unidad_medida'],
+                                         }],
+                                where: {   id_empresa: req.body.id_empresa
+                                         , eliminado: false
+                                         , nombr_articulo: { [Op.like]: '%' + req.body.nombr_articulo + '%' } },
+                                order: [['nombr_articulo', 'ASC']],
+                                limit: _limit,
+                                offset: _offset           
+            })
+            .then(result => res.status(200).send({ result: 'success', resultValue: result}))
+            .catch(error => { res.status(400).send(error); console.log('error custom', error) }); 
+        },
 
-        // updateProducto(req, res) {
-        //     return Producto
-        //           .findOne({ where: { idProducto: { [Op.ne]: req.params.id }, nombreProducto: req.body.nombreProducto } })
-        //           .then(existProd => {
-        //              if(!existProd) {
-        //                 return Producto.update({
-        //                     nombreProducto: req.body.nombreProducto,
-        //                     idTipoProducto: req.body.idTipoProducto,
-        //                     fechaCreacion: req.body.fechaCreacion,
-        //                     fechaModificacion: req.body.fechaModificacion                           
-        //                     }, { where: { idProducto: req.params.id} })
-        //                     .then(result => res.status(200).send({ result: 'success', resultValue: req.body.nombreProducto}))
-        //                     .catch(errorInst => res.status(400).send({ result: 'Failed', resultValue: errorInst }) )
-        //              } 
-        //              res.status(200).send({result: 'Exist', resultValue: existProd.nombreProducto })
-        //           })
-        //           .catch(error => { res.status(400).send({ result: 'Failed', resultValue: error }), console.log('error custom', error) })
-        // },
+        insertarArticulo(req, res) {
+            return Articulo
+                  .findOne({ where: {  nombr_articulo: req.body.nombr_articulo
+                                     , id_empresa: req.body.id_empresa
+                                     , eliminado: false } })
+                  .then(ArticuloExiste => {
+                     if(!ArticuloExiste) {
+                        return Articulo.create({
+                            id_empresa: req.body.id_empresa,
+                            id_tipo_articulo: req.body.id_tipo_articulo,
+                            id_categoria_articulo: req.body.id_categoria_articulo,
+                            id_unidad_medida: req.body.id_unidad_medida,
+                            cod_articulo: req.body.cod_articulo,
+                            nombr_articulo: req.body.nombr_articulo,
+                            nomb_articulo_corto: req.body.nomb_articulo_corto,
+                            foto: req.body.foto,
+                            eliminado: false,
+                            usuario_creacion: req.body.usuario_creacion,
+                            fecha_creacion: Sequelize.literal('NOW()')                            
+                            })
+                            .then(result => res.status(200).send({ result: 'success', 
+                                                                   resultValue: {   id_articulo: result.id_articulo
+                                                                                  , nombr_articulo: result.nombr_articulo
+                                                                                  , cod_articulo: result.cod_articulo
+                                                                                }}))
+                            .catch(errorInst => res.status(400).send({ result: 'failed', resultValue: errorInst }) )
+                     } 
+                     res.status(200).send({result: 'exist', resultValue: ArticuloExiste })
+                  })
+                  .catch(error => { res.status(400).send({ result: 'failed', resultValue: error }), console.log('error custom', error) })
+        },
 
-        // deleteProducto(req, res) {
-        //     return Producto
-        //           .findByPk(req.params.id)
-        //           .then(existProd => {
-        //                 if(!existProd) {
-        //                     return res.status(200).send({ result: 'notExist', resultValue: 'Not Exist'});
-        //                 }
-        //                 return Producto
-        //                       .destroy() //({where: { idProducto: req.params.id}}) 
-        //                       .then(resultDel => { res.status(200).send({result: 'success', resultValue: resultDel })})
-        //                     //   .catch(errorDel => { v = errorDel, res.status(400).send({ result: 'Failed2', resultValue: 'errorDel' })})
-        //            })
-        //           .catch(error => { res.status(400).send({ result: 'Failed', resultValue: typeof error }), console.log('error custom', error) })
-        // }
+        editarArticulo(req, res) {
+            return Articulo
+                  .findOne({ where: {   id_articulo: { [Op.ne]: req.params.id } // [Op.ne] = !=
+                                      , nombr_articulo: req.body.nombr_articulo
+                                      , id_empresa: req.body.id_empresa
+                                      , eliminado: false  
+                         } })
+                  .then(ArticuloExiste => {
+                     if(!ArticuloExiste) {
+                        return Articulo.update({
+                                id_empresa: req.body.id_empresa,
+                                id_tipo_articulo: req.body.id_tipo_articulo,
+                                id_categoria_articulo: req.body.id_categoria_articulo,
+                                id_unidad_medida: req.body.id_unidad_medida,
+                                cod_articulo: req.body.cod_articulo,
+                                nombr_articulo: req.body.nombr_articulo,
+                                nomb_articulo_corto: req.body.nomb_articulo_corto,
+                                foto: req.body.foto,
+                                eliminado: false,
+                                usuario_modificacion: req.body.usuario_modificacion,
+                                fecha_modificacion: Sequelize.literal('NOW()')                               
+                                }, { where: { id_articulo: req.params.id, id_empresa: req.body.id_empresa} })
+                            .then(result => res.status(200).send({ result: 'success', 
+                                                                   resultValue: { id_articulo: req.params.id
+                                                                                , nombr_articulo: req.body.nombr_articulo
+                                                                                , cod_articulo: req.body.cod_articulo
+                                                                            }}))
+                            .catch(errorInst => res.status(400).send({ result: 'failed', resultValue: errorInst }) )
+                     } 
+                     res.status(200).send({result: 'exist', resultValue: ArticuloExiste })
+                  })
+                  .catch(error => { res.status(400).send({ result: 'failed', resultValue: error }), console.log('error custom', error) })
+        },
 
-
+        desactivarArticulo(req, res) {
+            return Articulo
+                  .findOne({ where: {   id_articulo: req.params.id 
+                                      , id_empresa: req.body.id_empresa
+                                    } 
+                          })
+                  .then(ArticuloExiste => {
+                     if(ArticuloExiste) {
+                        return Articulo.update({
+                                eliminado: true,
+                                usuario_modificacion: req.body.usuario_modificacion,
+                                fecha_modificacion: Sequelize.literal('NOW()')                               
+                                }, { where: { id_articulo: req.params.id, id_empresa: req.body.id_empresa} })
+                            .then(result => res.status(200).send({ result: 'success', 
+                                                                   resultValue: { id_articulo: req.params.id
+                                                                                , nombr_articulo: ArticuloExiste.nombr_articulo
+                                                                                , cod_articulo: ArticuloExiste.cod_articulo
+                                                                             }}))
+                            .catch(errorInst => res.status(400).send({ result: 'failed', resultValue: errorInst }) )
+                     } 
+                     res.status(200).send({result: 'notExist', resultValue: 'Not Exist' })
+                  })
+                  .catch(error => { res.status(400).send({ result: 'failed', resultValue: error }), console.log('error custom', error) })
+        }
 };
